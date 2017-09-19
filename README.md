@@ -4,7 +4,7 @@
 
 Reduce the amount of Bunyan boilerplate code required with integration for Google Cloud Logging, ideal when working with microservices.
 
-bunyan-buddy sets up a *local stream* using bunyan-prettystream and a *remote stream* using @google-cloud/logging-bunyan. You can set the log levels for each using environment variables or as options when initializing it. For testing Google Cloud Logging locally, you can manually auth with it using a service account file.
+bunyan-buddy sets up a *local stream* using bunyan-prettystream (https://github.com/MaximusHaximus/node-bunyan-prettystrea) and a *remote stream* using @google-cloud/logging-bunyan. You can set the log levels for each using environment variables or as options when initializing it. For testing Google Cloud Logging locally, you can manually auth with it using a service account file.
 
 ### Usage
 
