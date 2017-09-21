@@ -28,6 +28,11 @@ class Logger {
             name: appName,
             streams: this.streams,
         });
+
+        // TODO: add module support
+        this.logger.module = (moduleName) => {
+            return this.logger;
+        };
     }
 
     addLocalStream(level) {
