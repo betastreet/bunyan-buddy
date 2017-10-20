@@ -8,7 +8,7 @@ module.exports = (options) => {
     if (typeof options.local_level === 'undefined') options.local_level = process.env.LOG_LEVEL_LOCAL;
     if (typeof options.remote_level === 'undefined') options.remote_level = process.env.LOG_LEVEL_REMOTE;
 
-    const logger = new Logger(options.app_name, options.local_level, options.remote_level, options.remote_auth);
+    const logger = new Logger(options.app, options.local_level, options.remote_level, options.remote_auth);
 
     return logger.logger;
 };
