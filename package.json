@@ -9,7 +9,7 @@
   "dependencies": {
     "bunyan": "^1.8.4",
     "bunyan-prettystream-circularsafe": "https://github.com/MaximusHaximus/node-bunyan-prettystream/archive/master.tar.gz",
-    "@google-cloud/logging-bunyan": "^0.5.0"
+    "@google-cloud/logging-bunyan": "^0.6.0"
   },
   "description": "Reduce the amount of Bunyan boilerplate code required, ideal when working with microservices.",
   "devDependencies": {
