@@ -7,8 +7,9 @@
     "url": "https://github.com/betastreet/bunyan-buddy/issues"
   },
   "dependencies": {
-    "bunyan": "^1.8.4",
+    "bunyan": "^1.8.12",
     "bunyan-prettystream-circularsafe": "https://github.com/MaximusHaximus/node-bunyan-prettystream/archive/master.tar.gz",
+    "@google-cloud/logging": "1.0.6",
     "@google-cloud/logging-bunyan": "^0.6.0"
   },
   "description": "Reduce the amount of Bunyan boilerplate code required, ideal when working with microservices.",
