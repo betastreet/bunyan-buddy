@@ -10,7 +10,10 @@ bunyan-buddy sets up a *local stream* using bunyan-prettystream (https://github.
 
 ```javascript
 const log = require('bunyan-buddy')(
-    app_name: 'my-app-name',    // defaults to 'app'
+    app: {
+      name: 'my-app-name',      // defaults to 'app'
+      version: '1.0.0',         // defaults to undefined
+    },
     local_level: 'debug',       // defaults to process.env.LOG_LEVEL_LOCAL or 'info'
     remote_level: 'info',       // defaults to process.env.LOG_LEVEL_REMOTE or not set
 
