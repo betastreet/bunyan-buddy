@@ -59,7 +59,7 @@ class Logger {
             auth.resource = auth.resource || {
                 type: 'project',
                 labels: {
-                    project_id: appParams.name,
+                    project_id: process.env.GCLOUD_PROJECT || appParams.name,
                 },
             };
         }
