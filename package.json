@@ -7,15 +7,13 @@
     "url": "https://github.com/betastreet/bunyan-buddy/issues"
   },
   "dependencies": {
-    "bunyan": "^1.8.12",
+    "bunyan": "^1.9.0",
     "bunyan-prettystream-circularsafe": "https://github.com/betastreet/node-bunyan-prettystream/archive/master.tar.gz",
-    "@google-cloud/logging": "1.0.6",
-    "@google-cloud/logging-bunyan": "^0.6.0"
+    "@google-cloud/logging": "^4.0.1",
+    "@google-cloud/logging-bunyan": "^0.9.1"
   },
   "description": "Reduce the amount of Bunyan boilerplate code required, ideal when working with microservices.",
-  "devDependencies": {
-    "jest": "^20.0.4"
-  },
+  "devDependencies": {},
   "directories": {},
   "homepage": "https://github.com/betastreet/bunyan-buddy#readme",
   "keywords": [
@@ -42,9 +40,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.5.1",
-  "jest": {
-    "bail": true,
-    "collectCoverage": true
-  }
+  "version": "1.5.1"
 }
