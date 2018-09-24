@@ -15,7 +15,6 @@ module.exports = (options) => {
 
 class Logger {
   constructor(appParams, localLevel, remoteLevel, remoteAuth) {
-    this.modules = [];
     this.streams = {};
     this.defaults = {
       appParams,
@@ -23,7 +22,8 @@ class Logger {
       remoteLevel,
       remoteAuth,
     };
-    this.logger = this.createLogger(appParams, localLevel, remoteLevel, remoteAuth);
+    this.logger = this.createLogger(appParams, localLevel, remoteLevel, remoteAuth, 'main');
+    this.modules = [this.logger];
   }
 
   createLogger(appParams, localLevel, remoteLevel, remoteAuth, name) {
@@ -41,6 +41,10 @@ class Logger {
 
     ['trace', 'debug', 'info', 'warn', 'error', 'fatal'].forEach(logMethod => myLoggerMethod(logger, logMethod));
     logger.module = (moduleName) => {
+      const module = this.modules.find(m => m.fields.module === moduleName);
+      if (module) {
+        return module;
+      }
       const moduleLogger = this.createLogger(appParams, localLevel, remoteLevel, remoteAuth, moduleName);
       this.modules.push(moduleLogger);
       moduleLogger.levels = (level, module, stream) => this.levels(level, module || moduleName, stream);
