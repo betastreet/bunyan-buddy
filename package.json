@@ -7,7 +7,7 @@
     "url": "https://github.com/betastreet/bunyan-buddy/issues"
   },
   "dependencies": {
-    "bunyan": "^1.9.0",
+    "bunyan": "^1.8.12",
     "bunyan-prettystream-circularsafe": "https://github.com/betastreet/node-bunyan-prettystream/archive/master.tar.gz",
     "@google-cloud/logging": "^4.0.1",
     "@google-cloud/logging-bunyan": "^0.9.1"
