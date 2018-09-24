@@ -89,6 +89,9 @@ class Logger {
         module.addStream(this.createRemoteStream(level, this.defaults.remoteAuth, this.defaults.appParams));
         module.streams[module.streams.length - 1].level = newLevel;
       }
+      let minLevel = bunyan.levelFromName['fatal'];
+      module.streams.forEach(s => minLevel = s.level < minLevel ? s.level : minLevel);
+      module._level = minLevel;
     } else {
       module.level(newLevel);
     }
