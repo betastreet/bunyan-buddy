@@ -16,6 +16,7 @@ module.exports = (options) => {
 class Logger {
   constructor(appParams, localLevel, remoteLevel, remoteAuth) {
     this.modules = [];
+    this.streams = {};
     this.defaults = {
       appParams,
       localLevel,
@@ -35,15 +36,16 @@ class Logger {
     }
     const logger = bunyan.createLogger(options);
     logger.log = myLoggerMethod(logger, 'info');
+    logger.setLevels = logger.levels; // original bunyan method
+    logger.levels = (level, module, stream) => this.levels(level, module, stream);
 
     ['trace', 'debug', 'info', 'warn', 'error', 'fatal'].forEach(logMethod => myLoggerMethod(logger, logMethod));
     logger.module = (moduleName) => {
       const moduleLogger = this.createLogger(appParams, localLevel, remoteLevel, remoteAuth, moduleName);
       this.modules.push(moduleLogger);
+      moduleLogger.levels = (level, module, stream) => this.levels(level, module || moduleName, stream);
       return moduleLogger;
     };
-    logger.setLevels = logger.levels; // original bunyan method
-    logger.levels = (level, module, stream) => this.levels(level, module, stream);
     return logger;
   }
 
@@ -78,8 +80,10 @@ class Logger {
         }
       } else if (streamName === 'stdout' && level) {
         module.addStream(this.createLocalStream(level));
+        module.streams[module.streams.length - 1].level = newLevel;
       } else if (streamName === 'gcloud' && level) {
         module.addStream(this.createRemoteStream(level, this.defaults.remoteAuth, this.defaults.appParams));
+        module.streams[module.streams.length - 1].level = newLevel;
       }
     } else {
       module.level(newLevel);
@@ -112,40 +116,46 @@ class Logger {
   }
 
   createLocalStream(level) {
-    const PrettyStream = require('bunyan-prettystream-circularsafe');
-    const stream = new PrettyStream();
-    stream.pipe(process.stdout);
-    return {
-      type: 'raw',
-      stream: stream,
-      level: level,
-      name: 'stdout',
-    };
+    if (!this.streams.stdout) {
+      const PrettyStream = require('bunyan-prettystream-circularsafe');
+      const stream = new PrettyStream();
+      stream.pipe(process.stdout);
+      this.streams.stdout = {
+        type: 'raw',
+        stream: stream,
+        level: level,
+        name: 'stdout',
+      };
+    }
+    return this.streams.stdout;
   }
 
   createRemoteStream(level, auth, appParams) {
-    const options = {
-      logName: appParams.name,
-      serviceContext: {
-        service: appParams.name,
-        version: appParams.version,
-      },
-    };
-    if (auth) {
-      Object.assign(options, auth);
-      options.resource = auth.resource || {
-        type: 'project',
-        labels: {
-          project_id: process.env.GCLOUD_PROJECT || appParams.name,
-          container_name: process.env.CONTAINER_NAME,
+    if (!this.streams.gcloud) {
+      const options = {
+        logName: appParams.name,
+        serviceContext: {
+          service: appParams.name,
+          version: appParams.version,
         },
       };
+      if (auth) {
+        Object.assign(options, auth);
+        options.resource = auth.resource || {
+          type: 'project',
+          labels: {
+            project_id: process.env.GCLOUD_PROJECT || appParams.name,
+            container_name: process.env.CONTAINER_NAME,
+          },
+        };
+      }
+      const { LoggingBunyan } = require('@google-cloud/logging-bunyan');
+      const loggingBunyan = new LoggingBunyan(options);
+      const stream = loggingBunyan.stream(level);
+      stream.name = 'gcloud';
+      this.streams.gcloud = stream;
     }
-    const { LoggingBunyan } = require('@google-cloud/logging-bunyan');
-    const loggingBunyan = new LoggingBunyan(options);
-    const stream = loggingBunyan.stream(level);
-    stream.name = 'gcloud';
-    return stream;
+    return this.streams.gcloud;
   }
 }
 
